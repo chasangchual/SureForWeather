@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">SureFor Weather</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="url_open_weather_map">http://api.openweathermap.org</string>
+    <string name="key_open_weather_map">3cd3c05dc4ff13ba9967374dfd7ed852</string>
+    <string name="url_google_geocode">https://maps.googleapis.com/</string>
+    <string name="key_google_geocode">AIzaSyCk4Y1pUW2O4_2WWboE2rCigFp9bAtPC1k</string>
 </resources>

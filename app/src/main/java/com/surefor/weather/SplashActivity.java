@@ -11,7 +11,10 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.surefor.weather.entity.CityManager;
+import com.squareup.otto.Bus;
+import com.surefor.weather.event.BusProvider;
+import com.surefor.weather.event.SearchAddress;
+import com.surefor.weather.event.SearchAutocompletePlace;
 import com.surefor.weather.utils.ViewUtils;
 
 import java.io.IOException;
@@ -30,37 +33,23 @@ public class SplashActivity extends Activity {
 
         ProgressBar pb = (ProgressBar) findViewById(R.id.pbSplash) ;
         pb.getIndeterminateDrawable().setColorFilter(Color.YELLOW, PorterDuff.Mode.MULTIPLY) ;
-
-        new LoadCities(getAssets()).execute() ;
     }
 
-    class LoadCities extends AsyncTask<Void, Void, Integer>
-    {
-        AssetManager assetManager ;
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        public LoadCities(AssetManager assetManager) {
-            this.assetManager = assetManager ;
-        }
+        Bus bus = BusProvider.getBus() ;
+        bus.register(this);
 
-        @Override
-        protected Integer doInBackground(Void... params) {
-            CityManager manager = CityManager.instance() ;
-            try {
-                manager.load(assetManager);
-            }
-            catch (IOException ex) {
+        bus.post(new SearchAutocompletePlace("oa"));
+    }
 
-            }
-            return manager.size() ;
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class) ;
-            startActivity(intent);
-
-            finish();
-        }
+        Bus bus = BusProvider.getBus() ;
+        bus.unregister(this);
     }
 }

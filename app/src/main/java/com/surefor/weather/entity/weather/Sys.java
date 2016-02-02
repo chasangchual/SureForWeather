@@ -1,4 +1,4 @@
-package com.surefor.weather.entity;
+package com.surefor.weather.entity.weather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

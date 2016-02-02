@@ -3,29 +3,41 @@ package com.surefor.weather.application;
 import android.app.Application;
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.surefor.weather.utils.CouchDBSession;
-
-import java.io.IOException;
+import com.squareup.otto.Bus;
+import com.surefor.weather.api.GoogleMap;
+import com.surefor.weather.event.BusProvider;
 
 /**
  * Created by ethan on 19/11/2015.
  */
 public class SuerForWeatherApp extends Application {
-    private CouchDBSession session ;
+    private static SuerForWeatherApp instance ;
+    private static Resources resources = null ;
+
+    public static SuerForWeatherApp context() {
+        return instance ;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        try {
-            session = CouchDBSession.instance(getApplicationContext()) ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
+        // reserve app resource for future reference
+        resources = getResources();
+
+        // reserve app context for future refernce
+        instance = (SuerForWeatherApp) getApplicationContext() ;
+
+        /* initialize otto event bus */
+        Bus bus = BusProvider.getBus() ;
+
+        // Create an event listener for Google Geocode
+        GoogleMap geoCode = new GoogleMap(bus) ;
+
+        bus.register(geoCode) ; // register google geo code retrofit manager
+        bus.register(this); // register global listner
     }
 
     @Override
@@ -61,5 +73,9 @@ public class SuerForWeatherApp extends Application {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public static Resources getAppResources() {
+        return resources ;
     }
 }
