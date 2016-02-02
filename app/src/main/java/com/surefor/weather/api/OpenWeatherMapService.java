@@ -12,6 +12,7 @@ public interface OpenWeatherMapService {
     @GET ("/data/2.5/weather")
     Call<CurrentWeather> getCurrentWeather(@Query("id") Long id, @Query("appid") String appid) ;
 
+    // http://api.openweathermap.org/data/2.5/weather?q=Oakville,%20ON,%20Canada&appid=3cd3c05dc4ff13ba9967374dfd7ed852
     @GET ("/data/2.5/weather")
     Call<CurrentWeather> getCurrentWeather(@Query("q") String name, @Query("appid") String appid) ;
 

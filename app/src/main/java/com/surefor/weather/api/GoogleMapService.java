@@ -15,6 +15,7 @@ public interface GoogleMapService {
     @GET("/maps/api/geocode/json")
     Call<GeoCode> getGeoCode(@Query("address") String address, @Query("key") String appid) ;
 
+	// https://maps.googleapis.com/maps/api/place/autocomplete/json?input=oa&types=(cities)&key=AIzaSyCk4Y1pUW2O4_2WWboE2rCigFp9bAtPC1k
     // https://maps.googleapis.com/maps/api/place/autocomplete/json?input=oa&types=geocode&key=AIzaSyCk4Y1pUW2O4_2WWboE2rCigFp9bAtPC1k
     @GET("/maps/api/place/autocomplete/json")
     Call<AutocompletePlace> getAutocompletePlace(@Query("input") String input, @Query("types") String types, @Query("key") String appid) ;
