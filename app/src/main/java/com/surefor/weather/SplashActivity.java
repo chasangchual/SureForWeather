@@ -44,7 +44,7 @@ public class SplashActivity extends Activity {
         bus.register(this);
 
         //bus.post(new SearchAutocompletePlace("oa"));
-        bus.post(new GetCurrentWeatherEvent("Oakville, ON, Canada"));
+        bus.post(new GetCurrentWeatherEvent("Oakville, ON, Canada").getRequest());
     }
 
     @Override

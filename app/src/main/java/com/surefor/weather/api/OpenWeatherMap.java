@@ -1,6 +1,7 @@
 package com.surefor.weather.api;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.surefor.weather.entity.weather.CurrentWeather;
 import com.surefor.weather.event.GetCurrentWeatherEvent;
 
@@ -20,6 +21,7 @@ public class OpenWeatherMap {
         this.bus = bus ;
     }
 
+    @Subscribe
     public void handleGetCurrentWeather(GetCurrentWeatherEvent.Request request) {
         OpenWeatherMapClient client = OpenWeatherMapClient.getInstance() ;
 
