@@ -55,6 +55,17 @@ public class GoogleMapUtils {
         return cities ;
     }
 
+    public static List<String> getDescription(AutocompletePlace places) {
+        assert (places != null) ;
+        List<String> descs = new ArrayList<String>() ;
+
+        for(Prediction prediction : places.getPredictions()) {
+            descs.add(prediction.getDescription()) ;
+        }
+
+        return descs ;
+    }
+
     private static Boolean contains(List<String> list, String... strings) {
         Boolean contains = Boolean.TRUE ;
 

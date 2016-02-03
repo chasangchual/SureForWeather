@@ -10,19 +10,24 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class OpenWeatherMapAPI {
-    private static OpenWeatherMapAPI instance = null ;
+public class OpenWeatherMapClient {
+    private static OpenWeatherMapClient instance = null ;
     private OpenWeatherMapService service = null ;
 
-    public static OpenWeatherMapAPI instance() {
+    public static OpenWeatherMapClient getInstance() {
         if(instance == null) {
-            instance = new OpenWeatherMapAPI() ;
+            instance = new OpenWeatherMapClient() ;
         }
         return instance ;
     }
 
-    private OpenWeatherMapAPI() {
+    private OpenWeatherMapClient() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SuerForWeatherApp.getAppResources().getText(R.string.url_open_weather_map).toString())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build() ;
 
+        service = retrofit.create(OpenWeatherMapService.class) ;
     }
 
 /*  comment out synchronous request
@@ -50,43 +55,15 @@ public class OpenWeatherMapAPI {
         return  currentWeather ;
     }*/
 
-    public void getCurrentWeather(Long id) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
-        Call<CurrentWeather> weather = service.getCurrentWeather(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
-
-        weather.enqueue(new Callback<CurrentWeather>() {
-            @Override
-            public void onResponse(Response<CurrentWeather> response, Retrofit retrofit) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
+    public Call<CurrentWeather> getCurrentWeather(Long id) {
+        return service.getCurrentWeather(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
     }
 
-
-    public void getCurrentWeather(String name) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
-        Call<CurrentWeather> weather = service.getCurrentWeather(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
-
-        weather.enqueue(new Callback<CurrentWeather>() {
-            @Override
-            public void onResponse(Response<CurrentWeather> response, Retrofit retrofit) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
+    public Call<CurrentWeather> getCurrentWeather(String name) {
+        return service.getCurrentWeather(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
     }
 
     public void getForecast(Long id) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
         Call<CurrentWeather> weather = service.getForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
 
         weather.enqueue(new Callback<CurrentWeather>() {
@@ -103,7 +80,6 @@ public class OpenWeatherMapAPI {
     }
 
     public void getForecast(String name) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
         Call<CurrentWeather> weather = service.getForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
 
         weather.enqueue(new Callback<CurrentWeather>() {
@@ -120,7 +96,6 @@ public class OpenWeatherMapAPI {
     }
 
     public void getDailyForecast(Long id) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
         Call<CurrentWeather> weather = service.getDailyForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
 
         weather.enqueue(new Callback<CurrentWeather>() {
@@ -137,7 +112,6 @@ public class OpenWeatherMapAPI {
     }
 
     public void getDailyForecast(String name) {
-        OpenWeatherMapService service = getOpenWeatherMapService() ;
         Call<CurrentWeather> weather = service.getDailyForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
 
         weather.enqueue(new Callback<CurrentWeather>() {
@@ -151,19 +125,5 @@ public class OpenWeatherMapAPI {
 
             }
         });
-    }
-
-    private OpenWeatherMapService getOpenWeatherMapService()
-    {
-        if(service == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(SuerForWeatherApp.getAppResources().getText(R.string.url_open_weather_map).toString())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build() ;
-
-            service = retrofit.create(OpenWeatherMapService.class) ;
-        }
-
-        return service ;
     }
 }

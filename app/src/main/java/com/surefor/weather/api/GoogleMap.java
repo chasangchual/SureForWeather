@@ -65,8 +65,13 @@ public class GoogleMap {
             public void onResponse(Response<AutocompletePlace> response, Retrofit retrofit) {
                 if(response.isSuccess()) {
                     AutocompletePlace autocompletePlaces = response.body() ;
-                    List<String> cities = GoogleMapUtils.getCityLongNameAndCountryShortName(autocompletePlaces) ;
-                    bus.post(new LoadedAutocompletePlace(cities));
+                    List<String> descs = GoogleMapUtils.getDescription(autocompletePlaces) ;
+
+                    OpenWeatherMapClient weatherMapClient = OpenWeatherMapClient.getInstance() ;
+                    for(String desc : descs) {
+                        weatherMapClient.getCurrentWeather(desc);
+                    }
+                    // bus.post(new LoadedAutocompletePlace(descs));
                 } else {
 
                 }
@@ -78,7 +83,7 @@ public class GoogleMap {
             }
         };
 
-        Call<AutocompletePlace> call = client.getAutocompletePlace(place.getPlace(), "geocode", String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_google_geocode)));
+        Call<AutocompletePlace> call = client.getAutocompletePlace(place.getPlace(), "(cities)", String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_google_geocode)));
         call.enqueue(callback);
     }
 }

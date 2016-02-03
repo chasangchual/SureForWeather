@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 import com.surefor.weather.event.BusProvider;
+import com.surefor.weather.event.GetCurrentWeatherEvent;
 import com.surefor.weather.event.SearchAddress;
 import com.surefor.weather.event.SearchAutocompletePlace;
 import com.surefor.weather.utils.ViewUtils;
@@ -42,7 +43,8 @@ public class SplashActivity extends Activity {
         Bus bus = BusProvider.getBus() ;
         bus.register(this);
 
-        bus.post(new SearchAutocompletePlace("oa"));
+        //bus.post(new SearchAutocompletePlace("oa"));
+        bus.post(new GetCurrentWeatherEvent("Oakville, ON, Canada"));
     }
 
     @Override
