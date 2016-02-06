@@ -1,8 +1,8 @@
-package com.surefor.weather.entity.weather;
+
+package com.surefor.weather.entity.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 public class Wind {
 

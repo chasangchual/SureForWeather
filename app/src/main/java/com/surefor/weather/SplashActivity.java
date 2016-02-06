@@ -1,24 +1,17 @@
 package com.surefor.weather;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.otto.Bus;
-import com.surefor.weather.event.BusProvider;
-import com.surefor.weather.event.GetCurrentWeatherEvent;
-import com.surefor.weather.event.SearchAddress;
-import com.surefor.weather.event.SearchAutocompletePlace;
+import com.surefor.weather.api.GoogleMap;
+import com.surefor.weather.api.OpenWeatherMap;
+import com.surefor.weather.event.GetWeatherForecastEvent;
 import com.surefor.weather.utils.ViewUtils;
-
-import java.io.IOException;
 
 public class SplashActivity extends Activity {
 
@@ -40,18 +33,24 @@ public class SplashActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        Bus bus = BusProvider.getBus() ;
-        bus.register(this);
+        OpenWeatherMap weatherMap = new OpenWeatherMap() ;
+        GoogleMap googleMap = new GoogleMap() ;
 
-        //bus.post(new SearchAutocompletePlace("oa"));
-        bus.post(new GetCurrentWeatherEvent("Oakville, ON, Canada").getRequest());
+//        googleMap.handleGetGeoCode(new GetAutocompletePlaceEvent().getRequest("oa"));
+
+
+//        GetWeatherCurrentEvent.Request getCurrentWeatherrequest = new GetWeatherCurrentEvent.Request("Oakville, ON, Canada") ;
+//        weatherMap.handleGetWeatherCurrent(getCurrentWeatherrequest);
+
+        GetWeatherForecastEvent.Request getForecastWeatherrequest = new GetWeatherForecastEvent.Request("Oakville, ON, Canada") ;
+        weatherMap.handleGetWeatherForecast(getForecastWeatherrequest);
+
+//        GetWeatherForecastDailyEvent.Request getForecastDailyWeatherrequest = new GetWeatherForecastDailyEvent.Request("Oakville, ON, Canada") ;
+//        weatherMap.handleGetWeatherForecastDaily(getForecastDailyWeatherrequest);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        Bus bus = BusProvider.getBus() ;
-        bus.unregister(this);
     }
 }

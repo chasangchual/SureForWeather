@@ -5,11 +5,6 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
-import com.squareup.otto.Bus;
-import com.surefor.weather.api.GoogleMap;
-import com.surefor.weather.api.OpenWeatherMap;
-import com.surefor.weather.event.BusProvider;
-
 /**
  * Created by ethan on 19/11/2015.
  */
@@ -30,14 +25,6 @@ public class SuerForWeatherApp extends Application {
 
         // reserve app context for future refernce
         instance = (SuerForWeatherApp) getApplicationContext() ;
-
-        /* initialize otto event bus */
-        Bus bus = BusProvider.getBus() ;
-
-        // Create an event listener for Google Geocode
-        bus.register(new GoogleMap(bus)) ; // register google geo code retrofit manager
-        bus.register(new OpenWeatherMap(bus)) ; // register google open weather map retrofit manager
-        bus.register(this); // register global listener
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.surefor.weather.entity.weather;
+package com.surefor.weather.entity.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,24 +8,27 @@ public class Main {
     @SerializedName("temp")
     @Expose
     private Double temp;
-    @SerializedName("pressure")
-    @Expose
-    private Double pressure;
-    @SerializedName("humidity")
-    @Expose
-    private Integer humidity;
     @SerializedName("temp_min")
     @Expose
     private Double tempMin;
     @SerializedName("temp_max")
     @Expose
     private Double tempMax;
+    @SerializedName("pressure")
+    @Expose
+    private Double pressure;
     @SerializedName("sea_level")
     @Expose
     private Double seaLevel;
     @SerializedName("grnd_level")
     @Expose
     private Double grndLevel;
+    @SerializedName("humidity")
+    @Expose
+    private Integer humidity;
+    @SerializedName("temp_kf")
+    @Expose
+    private Double tempKf;
 
     /**
      * 
@@ -43,42 +46,6 @@ public class Main {
      */
     public void setTemp(Double temp) {
         this.temp = temp;
-    }
-
-    /**
-     * 
-     * @return
-     *     The pressure
-     */
-    public Double getPressure() {
-        return pressure;
-    }
-
-    /**
-     * 
-     * @param pressure
-     *     The pressure
-     */
-    public void setPressure(Double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
-     * 
-     * @return
-     *     The humidity
-     */
-    public Integer getHumidity() {
-        return humidity;
-    }
-
-    /**
-     * 
-     * @param humidity
-     *     The humidity
-     */
-    public void setHumidity(Integer humidity) {
-        this.humidity = humidity;
     }
 
     /**
@@ -120,6 +87,24 @@ public class Main {
     /**
      * 
      * @return
+     *     The pressure
+     */
+    public Double getPressure() {
+        return pressure;
+    }
+
+    /**
+     * 
+     * @param pressure
+     *     The pressure
+     */
+    public void setPressure(Double pressure) {
+        this.pressure = pressure;
+    }
+
+    /**
+     * 
+     * @return
      *     The seaLevel
      */
     public Double getSeaLevel() {
@@ -151,6 +136,42 @@ public class Main {
      */
     public void setGrndLevel(Double grndLevel) {
         this.grndLevel = grndLevel;
+    }
+
+    /**
+     * 
+     * @return
+     *     The humidity
+     */
+    public Integer getHumidity() {
+        return humidity;
+    }
+
+    /**
+     * 
+     * @param humidity
+     *     The humidity
+     */
+    public void setHumidity(Integer humidity) {
+        this.humidity = humidity;
+    }
+
+    /**
+     * 
+     * @return
+     *     The tempKf
+     */
+    public Double getTempKf() {
+        return tempKf;
+    }
+
+    /**
+     * 
+     * @param tempKf
+     *     The temp_kf
+     */
+    public void setTempKf(Double tempKf) {
+        this.tempKf = tempKf;
     }
 
 }

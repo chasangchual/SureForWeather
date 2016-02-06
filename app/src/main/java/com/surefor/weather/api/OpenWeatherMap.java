@@ -1,55 +1,111 @@
 package com.surefor.weather.api;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-import com.surefor.weather.entity.weather.CurrentWeather;
-import com.surefor.weather.event.GetCurrentWeatherEvent;
+import android.util.Log;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import com.surefor.weather.entity.current.WeatherCurrent;
+import com.surefor.weather.entity.forecast.WeatherForecast;
+import com.surefor.weather.entity.dailyforecast.WeatherDailyForecast;
+import com.surefor.weather.event.GetWeatherCurrentEvent;
+import com.surefor.weather.event.GetWeatherDailyForecastEvent;
+import com.surefor.weather.event.GetWeatherForecastEvent;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Ethan on 2016-02-03.
  */
 public class OpenWeatherMap {
-    private Bus bus = null ;
-    Call<CurrentWeather> call = null ;
 
-    public OpenWeatherMap(Bus bus) {
-        this.bus = bus ;
+    public OpenWeatherMap() {
     }
 
-    @Subscribe
-    public void handleGetCurrentWeather(GetCurrentWeatherEvent.Request request) {
-        OpenWeatherMapClient client = OpenWeatherMapClient.getInstance() ;
+    public void handleGetWeatherCurrent(GetWeatherCurrentEvent.Request request) {
+        OpenWeatherMapClient client = OpenWeatherMapClient.getInstance();
 
-        Callback<CurrentWeather> callback = new Callback<CurrentWeather>() {
+        Observable<WeatherCurrent> observable = null;
 
-            @Override
-            public void onResponse(Response<CurrentWeather> response, Retrofit retrofit) {
-                if(response.isSuccess()) {
-                    GetCurrentWeatherEvent event = new GetCurrentWeatherEvent(response.body()) ;
-                    // trigger event handler to update UI to show current weather information
-                    bus.post(event.getResponse());
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        } ;
-
-        if(request.getRequestType() == GetCurrentWeatherEvent.REQUEST_TYPE.BY_ID) {
-            call = client.getCurrentWeather(request.getId());
-        } else if (request.getRequestType() == GetCurrentWeatherEvent.REQUEST_TYPE.BY_NAME) {
-            call = client.getCurrentWeather(request.getName());
+        if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_ID) {
+            observable = client.getCurrent(request.getId());
+        } else if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_NAME) {
+            observable = client.getCurrent(request.getName());
         }
 
-        call.enqueue(callback);
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<WeatherCurrent>() {
+                    @Override
+                    public void call(WeatherCurrent weatherCurrent) {
+                        GetWeatherCurrentEvent event = new GetWeatherCurrentEvent();
+                        event.getResponse(weatherCurrent);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.e("handleGetWeatherCurrent", throwable.getMessage()) ;
+                    }
+                });
     }
+
+    public void handleGetWeatherForecast(GetWeatherForecastEvent.Request request) {
+        OpenWeatherMapClient client = OpenWeatherMapClient.getInstance();
+
+        Observable<WeatherForecast> observable = null;
+
+        if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_ID) {
+            observable = client.getForecast(request.getId());
+        } else if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_NAME) {
+            observable = client.getForecast(request.getName());
+        }
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<WeatherForecast>() {
+                    @Override
+                    public void call(WeatherForecast weatherForecast) {
+                        GetWeatherForecastEvent event = new GetWeatherForecastEvent();
+                        event.getResponse(weatherForecast);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.e("handleGetWeatherCurrent", throwable.getMessage()) ;
+                    }
+                });
+
+
+    }
+
+    public void handleGetWeatherForecastDaily(GetWeatherDailyForecastEvent.Request request) {
+        OpenWeatherMapClient client = OpenWeatherMapClient.getInstance();
+
+        Observable<WeatherDailyForecast> observable = null;
+
+        if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_ID) {
+            observable = client.getDailyForecast(request.getId()) ;
+
+        } else if (request.getRequestType() == GetWeatherCurrentEvent.REQUEST_TYPE.BY_NAME) {
+            observable = client.getDailyForecast(request.getName());
+        }
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<WeatherDailyForecast>() {
+                    @Override
+                    public void call(WeatherDailyForecast weatherForecast) {
+                        GetWeatherDailyForecastEvent event = new GetWeatherDailyForecastEvent();
+                        event.getResponse(weatherForecast);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.e("handleGetWeatherCurrent", throwable.getMessage()) ;
+                    }
+                });
+
+
+    }
+
 }
