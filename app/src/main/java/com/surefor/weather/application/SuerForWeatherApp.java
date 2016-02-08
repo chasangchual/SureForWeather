@@ -23,7 +23,7 @@ public class SuerForWeatherApp extends Application {
         // reserve app resource for future reference
         resources = getResources();
 
-        // reserve app context for future refernce
+        // reserve app context for future reference
         instance = (SuerForWeatherApp) getApplicationContext() ;
     }
 

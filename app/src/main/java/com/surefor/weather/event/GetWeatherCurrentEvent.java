@@ -22,7 +22,6 @@ public class GetWeatherCurrentEvent extends GetWeatherEvent<WeatherCurrent> {
     }
 
     public static class Response extends GetWeatherEvent.Response<WeatherCurrent>  {
-
         public Response(WeatherCurrent weatherCurrent) {
             super(weatherCurrent);
         }

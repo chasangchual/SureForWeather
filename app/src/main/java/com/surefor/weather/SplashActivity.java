@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.surefor.weather.api.GoogleMap;
 import com.surefor.weather.api.OpenWeatherMap;
+import com.surefor.weather.bus.RxBus;
+import com.surefor.weather.event.GetAutocompletePlaceEvent;
+import com.surefor.weather.event.GetWeatherCurrentEvent;
+import com.surefor.weather.event.GetWeatherDailyForecastEvent;
 import com.surefor.weather.event.GetWeatherForecastEvent;
 import com.surefor.weather.utils.ViewUtils;
 
@@ -33,8 +37,11 @@ public class SplashActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        OpenWeatherMap weatherMap = new OpenWeatherMap() ;
-        GoogleMap googleMap = new GoogleMap() ;
+        RxBus.getBus().register(GetAutocompletePlaceEvent.Request.class, GoogleMap.getGetCodeAction()) ;
+
+        RxBus.getBus().register(GetWeatherCurrentEvent.Request.class, OpenWeatherMap.getWeatherCurrentAction()) ;
+        RxBus.getBus().register(GetWeatherForecastEvent.Request.class, OpenWeatherMap.getWeatherForecastAction()) ;
+        RxBus.getBus().register(GetWeatherDailyForecastEvent.Request.class, OpenWeatherMap.getWeatherDailyForecastAction()) ;
 
 //        googleMap.handleGetGeoCode(new GetAutocompletePlaceEvent().getRequest("oa"));
 
@@ -43,7 +50,8 @@ public class SplashActivity extends Activity {
 //        weatherMap.handleGetWeatherCurrent(getCurrentWeatherrequest);
 
         GetWeatherForecastEvent.Request getForecastWeatherrequest = new GetWeatherForecastEvent.Request("Oakville, ON, Canada") ;
-        weatherMap.handleGetWeatherForecast(getForecastWeatherrequest);
+        // weatherMap.handleGetWeatherForecast(getForecastWeatherrequest);
+        RxBus.getBus().post(getForecastWeatherrequest);
 
 //        GetWeatherForecastDailyEvent.Request getForecastDailyWeatherrequest = new GetWeatherForecastDailyEvent.Request("Oakville, ON, Canada") ;
 //        weatherMap.handleGetWeatherForecastDaily(getForecastDailyWeatherrequest);
@@ -52,5 +60,11 @@ public class SplashActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        RxBus.getBus().unregister(GetAutocompletePlaceEvent.Request.class) ;
+
+        RxBus.getBus().unregister(GetWeatherCurrentEvent.Request.class) ;
+        RxBus.getBus().unregister(GetWeatherForecastEvent.Request.class) ;
+        RxBus.getBus().unregister(GetWeatherDailyForecastEvent.Request.class) ;
     }
 }

@@ -23,7 +23,6 @@ public class GetWeatherForecastEvent extends GetWeatherEvent<WeatherForecast> {
     }
 
     public static class Response extends GetWeatherEvent.Response<WeatherForecast>  {
-
         public Response(WeatherForecast weatherForecast) {
             super(weatherForecast);
         }

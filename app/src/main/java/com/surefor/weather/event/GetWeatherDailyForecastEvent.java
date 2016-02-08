@@ -21,7 +21,6 @@ public class GetWeatherDailyForecastEvent extends GetWeatherEvent<WeatherDailyFo
     }
 
     public static class Response extends GetWeatherEvent.Response<WeatherDailyForecast>  {
-
         public Response(WeatherDailyForecast weatherDailyForecast) {
             super(weatherDailyForecast);
         }

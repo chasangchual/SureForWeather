@@ -2,10 +2,8 @@ package com.surefor.weather.api;
 
 import com.surefor.weather.R;
 import com.surefor.weather.application.SuerForWeatherApp;
-import com.surefor.weather.entity.geocode.GeoCode;
 import com.surefor.weather.entity.place.AutocompletePlace;
 import com.surefor.weather.event.GetAutocompletePlaceEvent;
-import com.surefor.weather.event.SearchAddress;
 import com.surefor.weather.utils.GoogleMapUtils;
 
 import java.util.List;
@@ -21,6 +19,51 @@ import rx.schedulers.Schedulers;
 public class GoogleMap {
 
     public GoogleMap() {
+    }
+
+    public static Action1<GetAutocompletePlaceEvent.Request> getGetCodeAction() {
+        return  new Action1<GetAutocompletePlaceEvent.Request>() {
+            @Override
+            public void call(GetAutocompletePlaceEvent.Request request) {
+                GoogleMapClient client = GoogleMapClient.getInstance() ;
+                Observable<AutocompletePlace> observable = client.getAutocompletePlace(request.getPlace(), "(cities)", String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_google_geocode)));
+
+                observable.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<AutocompletePlace>() {
+                            @Override
+                            public void call(AutocompletePlace autocompletePlace) {
+                                List<String> cities = GoogleMapUtils.getCityLongNameAndCountryShortName(autocompletePlace);
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+
+                            }
+                        });
+            }
+        } ;
+    }
+
+    /**
+     *
+    public void handleGetGeoCode(GetAutocompletePlaceEvent.Request reqeust) {
+        GoogleMapClient client = GoogleMapClient.getInstance() ;
+        Observable<AutocompletePlace> observable = client.getAutocompletePlace(reqeust.getPlace(), "(cities)", String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_google_geocode)));
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<AutocompletePlace>() {
+                    @Override
+                    public void call(AutocompletePlace autocompletePlace) {
+                        List<String> cities = GoogleMapUtils.getCityLongNameAndCountryShortName(autocompletePlace);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
     }
 
     public void handleGetGeoCode(SearchAddress address) {
@@ -43,24 +86,5 @@ public class GoogleMap {
                 });
     }
 
-    public void handleGetGeoCode(GetAutocompletePlaceEvent.Request reqeust) {
-        GoogleMapClient client = GoogleMapClient.getInstance() ;
-        Observable<AutocompletePlace> observable = client.getAutocompletePlace(reqeust.getPlace(), "(cities)", String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_google_geocode)));
-
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<AutocompletePlace>() {
-                    @Override
-                    public void call(AutocompletePlace autocompletePlace) {
-                        List<String> cities = GoogleMapUtils.getCityLongNameAndCountryShortName(autocompletePlace);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
-
-
-    }
+    */
 }

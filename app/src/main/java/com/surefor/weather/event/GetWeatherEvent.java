@@ -15,6 +15,14 @@ public abstract class GetWeatherEvent<T> {
         return new Request(name) ;
     }
 
+    public Response getResponse(Long id, T obj) {
+        return new Response(obj) ;
+    }
+
+    public Response getResponse(String name, T obj) {
+        return new Response(obj) ;
+    }
+
     public Response getResponse(T obj) {
         return new Response(obj) ;
     }
@@ -72,5 +80,4 @@ public abstract class GetWeatherEvent<T> {
             this.obj = obj;
         }
     }
-
 }

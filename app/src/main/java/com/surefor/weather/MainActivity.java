@@ -17,10 +17,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+/*
+        RxBus.getBus().register(GetAutocompletePlaceEvent.Request.class, GoogleMap.getGetCodeAction()) ;
+
+        RxBus.getBus().register(GetWeatherCurrentEvent.Request.class, OpenWeatherMap.getWeatherCurrentAction()) ;
+        RxBus.getBus().register(GetWeatherForecastEvent.Request.class, OpenWeatherMap.getWeatherForecastAction()) ;
+        RxBus.getBus().register(GetWeatherDailyForecastEvent.Request.class, OpenWeatherMap.getWeatherDailyForecastAction()) ;*/
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+/*        RxBus.getBus().unregister(GetAutocompletePlaceEvent.Request.class) ;
+
+        RxBus.getBus().unregister(GetWeatherCurrentEvent.Request.class) ;
+        RxBus.getBus().unregister(GetWeatherForecastEvent.Request.class) ;
+        RxBus.getBus().unregister(GetWeatherDailyForecastEvent.Request.class) ;*/
     }
 }
