@@ -22,7 +22,15 @@ public class GetWeatherDailyForecastEvent extends GetWeatherEvent<WeatherDailyFo
 
     public static class Response extends GetWeatherEvent.Response<WeatherDailyForecast>  {
         public Response(WeatherDailyForecast weatherDailyForecast) {
-            super(weatherDailyForecast);
+            super(getCityName(weatherDailyForecast), weatherDailyForecast);
         }
+
+        public Response(String name, WeatherDailyForecast weatherDailyForecast) {
+            super(name, weatherDailyForecast);
+        }
+    }
+
+    private static String getCityName(WeatherDailyForecast weatherDailyForecast) {
+        return weatherDailyForecast.getCity().getName() + "," + weatherDailyForecast.getCity().getCountry() ;
     }
 }

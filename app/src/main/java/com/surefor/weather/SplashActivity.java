@@ -1,20 +1,16 @@
 package com.surefor.weather;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.surefor.weather.api.GoogleMap;
-import com.surefor.weather.api.OpenWeatherMap;
-import com.surefor.weather.bus.RxBus;
-import com.surefor.weather.event.GetAutocompletePlaceEvent;
-import com.surefor.weather.event.GetWeatherCurrentEvent;
-import com.surefor.weather.event.GetWeatherDailyForecastEvent;
-import com.surefor.weather.event.GetWeatherForecastEvent;
+import com.surefor.weather.info.CityWeatherInfoPersist;
 import com.surefor.weather.utils.ViewUtils;
 
 public class SplashActivity extends Activity {
@@ -37,34 +33,30 @@ public class SplashActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        RxBus.getBus().register(GetAutocompletePlaceEvent.Request.class, GoogleMap.getGetCodeAction()) ;
-
-        RxBus.getBus().register(GetWeatherCurrentEvent.Request.class, OpenWeatherMap.getWeatherCurrentAction()) ;
-        RxBus.getBus().register(GetWeatherForecastEvent.Request.class, OpenWeatherMap.getWeatherForecastAction()) ;
-        RxBus.getBus().register(GetWeatherDailyForecastEvent.Request.class, OpenWeatherMap.getWeatherDailyForecastAction()) ;
-
-//        googleMap.handleGetGeoCode(new GetAutocompletePlaceEvent().getRequest("oa"));
-
-
-//        GetWeatherCurrentEvent.Request getCurrentWeatherrequest = new GetWeatherCurrentEvent.Request("Oakville, ON, Canada") ;
-//        weatherMap.handleGetWeatherCurrent(getCurrentWeatherrequest);
-
-        GetWeatherForecastEvent.Request getForecastWeatherrequest = new GetWeatherForecastEvent.Request("Oakville, ON, Canada") ;
-        // weatherMap.handleGetWeatherForecast(getForecastWeatherrequest);
-        RxBus.getBus().post(getForecastWeatherrequest);
-
-//        GetWeatherForecastDailyEvent.Request getForecastDailyWeatherrequest = new GetWeatherForecastDailyEvent.Request("Oakville, ON, Canada") ;
-//        weatherMap.handleGetWeatherForecastDaily(getForecastDailyWeatherrequest);
+        new WeatherInfoLoadingWorker().execute() ;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
 
-        RxBus.getBus().unregister(GetAutocompletePlaceEvent.Request.class) ;
+    class WeatherInfoLoadingWorker extends AsyncTask<Void, Void, Void> {
 
-        RxBus.getBus().unregister(GetWeatherCurrentEvent.Request.class) ;
-        RxBus.getBus().unregister(GetWeatherForecastEvent.Request.class) ;
-        RxBus.getBus().unregister(GetWeatherDailyForecastEvent.Request.class) ;
+        @Override
+        protected Void doInBackground(Void... params) {
+            CityWeatherInfoPersist.load();
+
+            return null ;
+        }
+
+        @Override
+        protected void onPostExecute(Void value) {
+            super.onPostExecute(value);
+
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class) ;
+            startActivity(intent) ;
+            finish() ;
+        }
     }
 }

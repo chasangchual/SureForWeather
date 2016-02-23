@@ -23,7 +23,15 @@ public class GetWeatherCurrentEvent extends GetWeatherEvent<WeatherCurrent> {
 
     public static class Response extends GetWeatherEvent.Response<WeatherCurrent>  {
         public Response(WeatherCurrent weatherCurrent) {
-            super(weatherCurrent);
+            super(getCityName(weatherCurrent), weatherCurrent);
         }
+
+        public Response(String name, WeatherCurrent weatherCurrent) {
+            super(name, weatherCurrent);
+        }
+    }
+
+    private static String getCityName(WeatherCurrent weatherCurrent) {
+        return weatherCurrent.getName() + "," + weatherCurrent.getSys().getCountry() ;
     }
 }

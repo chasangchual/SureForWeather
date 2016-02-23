@@ -23,6 +23,9 @@ public class OpenWeatherMap {
     public OpenWeatherMap() {
     }
 
+    /**
+     * returns RxJava Action to handle current weather information request
+     */
     public static Action1<GetWeatherCurrentEvent.Request> getWeatherCurrentAction() {
         return  new Action1<GetWeatherCurrentEvent.Request>() {
             @Override
@@ -48,13 +51,16 @@ public class OpenWeatherMap {
                         }, new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                Log.e("handleGetWeatherCurrent", throwable.getMessage());
+                                Log.e("OpenWeatherMap", throwable.getMessage());
                             }
                         });
             }
         } ;
     }
 
+    /**
+     * returns RxJava Action to handle weather forecast information request
+     */
     public static Action1<GetWeatherForecastEvent.Request> getWeatherForecastAction() {
         return  new Action1<GetWeatherForecastEvent.Request>() {
             @Override
@@ -81,13 +87,16 @@ public class OpenWeatherMap {
                         }, new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                Log.e("handleGetWeatherCurrent", throwable.getMessage()) ;
+                                Log.e("OpenWeatherMap", throwable.getMessage()) ;
                             }
                         });
             }
         } ;
     }
 
+    /**
+     * returns RxJava Action to handle weather daily forecast information request
+     */
     public static Action1<GetWeatherDailyForecastEvent.Request> getWeatherDailyForecastAction() {
         return  new Action1<GetWeatherDailyForecastEvent.Request>() {
             @Override
@@ -106,14 +115,14 @@ public class OpenWeatherMap {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<WeatherDailyForecast>() {
                             @Override
-                            public void call(WeatherDailyForecast weatherForecast) {
-                                GetWeatherDailyForecastEvent event = new GetWeatherDailyForecastEvent();
-                                event.getResponse(weatherForecast);
+                            public void call(WeatherDailyForecast weatherDailyForecast) {
+                                GetWeatherDailyForecastEvent.Response response = new GetWeatherDailyForecastEvent.Response(weatherDailyForecast);
+                                RxBus.getBus().post(response);
                             }
                         }, new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                Log.e("handleGetWeatherCurrent", throwable.getMessage()) ;
+                                Log.e("OpenWeatherMap", throwable.getMessage()) ;
                             }
                         });
             }

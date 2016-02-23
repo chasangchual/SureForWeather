@@ -24,8 +24,15 @@ public class GetWeatherForecastEvent extends GetWeatherEvent<WeatherForecast> {
 
     public static class Response extends GetWeatherEvent.Response<WeatherForecast>  {
         public Response(WeatherForecast weatherForecast) {
-            super(weatherForecast);
+            super(getCityName(weatherForecast), weatherForecast);
+        }
+
+        public Response(String name, WeatherForecast weatherForecast) {
+            super(name, weatherForecast);
         }
     }
 
+    private static String getCityName(WeatherForecast weatherForecast) {
+        return weatherForecast.getCity().getName() + "," + weatherForecast.getCity().getName() ;
+    }
 }

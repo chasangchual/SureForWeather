@@ -13,7 +13,7 @@ public class DataBaseUtils {
     public static Boolean exists(String name) {
         SQLiteDatabase liteDB = null;
         try {
-            File database = SuerForWeatherApp.context().getDatabasePath(name) ;
+            File database = SuerForWeatherApp.getInstance().getDatabasePath(name) ;
             if(database.exists()) {
                 String path = database.getAbsolutePath() ;
                 liteDB = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY) ;

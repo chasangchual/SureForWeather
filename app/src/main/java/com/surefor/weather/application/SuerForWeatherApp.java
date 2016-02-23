@@ -5,6 +5,12 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
+import com.surefor.weather.bus.RxBus;
+import com.surefor.weather.event.GetWeatherCurrentEvent;
+import com.surefor.weather.event.GetWeatherDailyForecastEvent;
+import com.surefor.weather.event.GetWeatherForecastEvent;
+import com.surefor.weather.info.CityWeatherInfoPersist;
+
 /**
  * Created by ethan on 19/11/2015.
  */
@@ -12,7 +18,7 @@ public class SuerForWeatherApp extends Application {
     private static SuerForWeatherApp instance ;
     private static Resources resources = null ;
 
-    public static SuerForWeatherApp context() {
+    public static SuerForWeatherApp getInstance() {
         return instance ;
     }
 
@@ -25,6 +31,11 @@ public class SuerForWeatherApp extends Application {
 
         // reserve app context for future reference
         instance = (SuerForWeatherApp) getApplicationContext() ;
+
+        // register event handler to persist weather information
+        RxBus.getBus().register(GetWeatherCurrentEvent.Response.class, CityWeatherInfoPersist.getCurrentWeatherPersistAction()) ;
+        RxBus.getBus().register(GetWeatherForecastEvent.Response.class, CityWeatherInfoPersist.getWeatherForecastPersistAction()) ;
+        RxBus.getBus().register(GetWeatherDailyForecastEvent.Response.class, CityWeatherInfoPersist.getWeatherDailyForecastPersistAction()) ;
     }
 
     @Override

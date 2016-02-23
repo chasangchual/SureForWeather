@@ -15,16 +15,8 @@ public abstract class GetWeatherEvent<T> {
         return new Request(name) ;
     }
 
-    public Response getResponse(Long id, T obj) {
-        return new Response(obj) ;
-    }
-
     public Response getResponse(String name, T obj) {
-        return new Response(obj) ;
-    }
-
-    public Response getResponse(T obj) {
-        return new Response(obj) ;
+        return new Response(name, obj) ;
     }
 
     public enum REQUEST_TYPE { BY_ID, BY_NAME }
@@ -67,17 +59,23 @@ public abstract class GetWeatherEvent<T> {
 
     public static class Response<T> {
         private T obj ;
+        private String name ;
 
-        public Response(T t) {
+        public Response(String name, T t) {
+            this.name = name ;
             this.obj = t ;
         }
 
-        public Object getObject() {
+        public T getObject() {
             return obj;
         }
 
         public void setObject(T obj) {
             this.obj = obj;
+        }
+
+        public String getName() {
+            return this.name ;
         }
     }
 }

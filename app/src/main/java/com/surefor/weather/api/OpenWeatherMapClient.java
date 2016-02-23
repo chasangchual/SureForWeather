@@ -17,15 +17,22 @@ public class OpenWeatherMapClient {
 
     public static OpenWeatherMapClient getInstance() {
         if(instance == null) {
-            instance = new OpenWeatherMapClient() ;
+            instance = new OpenWeatherMapClient(SuerForWeatherApp.getAppResources().getText(R.string.url_open_weather_map).toString()) ;
         }
         return instance ;
     }
 
-    private OpenWeatherMapClient() {
+    public static OpenWeatherMapClient getInstance(String baseURL) {
+        if(instance == null) {
+            instance = new OpenWeatherMapClient(baseURL) ;
+        }
+        return instance ;
+    }
+
+    private OpenWeatherMapClient(String baseURL) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(SuerForWeatherApp.getAppResources().getText(R.string.url_open_weather_map).toString())
+                .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build() ;
 
@@ -33,29 +40,52 @@ public class OpenWeatherMapClient {
     }
 
     public Observable<WeatherCurrent> getCurrent(Long id) {
-        return service.getCurrent(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
+        return getCurrent(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map))) ;
     }
 
     public Observable<WeatherCurrent> getCurrent(String name) {
-        return service.getCurrent(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+        return getCurrent(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+    }
+
+    public Observable<WeatherCurrent> getCurrent(Long id, String key) {
+        return service.getCurrent(id, key) ;
+    }
+
+    public Observable<WeatherCurrent> getCurrent(String name, String key) {
+        return service.getCurrent(name, key);
     }
 
     public Observable<WeatherForecast>  getForecast(Long id) {
-        return service.getForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+        return getForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
     }
 
     public Observable<WeatherForecast> getForecast(String name) {
-        return service.getForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+        return getForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+    }
+
+    public Observable<WeatherForecast>  getForecast(Long id, String key) {
+        return service.getForecast(id, key);
+    }
+
+    public Observable<WeatherForecast> getForecast(String name, String key) {
+        return service.getForecast(name, key);
     }
 
     public Observable<WeatherDailyForecast> getDailyForecast(Long id) {
-        return service.getDailyForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+        return getDailyForecast(id, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
     }
 
     public Observable<WeatherDailyForecast> getDailyForecast(String name) {
-        return service.getDailyForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
+        return getDailyForecast(name, String.valueOf(SuerForWeatherApp.getAppResources().getText(R.string.key_open_weather_map)));
     }
 
+    public Observable<WeatherDailyForecast> getDailyForecast(Long id, String key) {
+        return service.getDailyForecast(id, key);
+    }
+
+    public Observable<WeatherDailyForecast> getDailyForecast(String name, String key) {
+        return service.getDailyForecast(name, key);
+    }
 /*  comment out synchronous request
     public CurrentWeather getCurrentWeather(Long id) {
         Retrofit retrofit = new Retrofit.Builder()
