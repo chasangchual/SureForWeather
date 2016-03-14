@@ -34,13 +34,16 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/button" />
+            android:layout_toLeftOf="@+id/button"
+            android:autoText="false"
+            android:textCursorDrawable="@null"
+            android:background="@drawable/search_edit"
+            android:singleLine="true"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layoutList"
         android:layout_below="@+id/layoutSearch"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -49,7 +52,8 @@
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listView" />
+            android:id="@+id/lvCity" />
+
     </RelativeLayout>
 
 </RelativeLayout>
