@@ -8,12 +8,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtCity"
         android:text="city name"
-        android:textSize="25dp" />
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtCountry"
         android:text="country name"
-        android:textSize="20dp" />
+        android:textSize="14dp" />
 </LinearLayout>

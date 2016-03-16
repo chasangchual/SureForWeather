@@ -1,60 +1,59 @@
 package com.surefor.weather.event;
 
+import com.surefor.weather.api.GoogleMapService;
+import com.surefor.weather.entity.place.Prediction;
+
 import java.util.List;
 
 /**
  * Created by Ethan on 2016-02-02.
  */
 public class GetAutocompletePlaceEvent {
-    private Request request = new Request() ;
-    private Response response = new Response() ;
-
     public GetAutocompletePlaceEvent() {
     }
 
     public Request getRequest(String place) {
-        request.setPlace(place);
-        return this.request ;
+        return new GetAutocompletePlaceEvent.Request(place) ;
     }
 
-    public Response getResponse(List<String> places) {
-        response.setPlaces(places);
-        return this.response ;
+    public Response getResponse(List<Prediction> predictions) {
+        return new GetAutocompletePlaceEvent.Response(predictions) ;
     }
 
-    public class Request {
-        private String place;
+    public static class Request {
+        private final String place;
+
+        public Request(String palce) {
+            this.place = palce ;
+        }
 
         public String getPlace() {
             return place;
         }
-
-        public void setPlace(String place) {
-            this.place = place;
-        }
     }
 
-    public class Response {
-        private List<String> places ;
+    public static class Response {
+        private final List<Prediction> predictions ;
+        private final String status ;
 
-        public Response() {
+        public Response(List<Prediction> predictions) {
+            this.predictions = predictions ;
+            this.status = GoogleMapService.STATUS_OK ;
         }
 
-        public List<String> getPlaces() {
-            return places;
+        public Response(List<Prediction> predictions, String status) {
+            this.predictions = predictions ;
+            this.status = status ;
         }
 
-        public void setPlaces(List<String> places) {
-            places.clear();
-            this.places.addAll(places);
+        public List<Prediction> getPredictions() {
+            return predictions;
         }
-
-        public void addPlace(String place) {
-            this.places.add(place);
+        public String getStatus() {
+            return status ;
         }
-
         public Integer size() {
-            return this.places.size() ;
+            return predictions.size() ;
         }
     }
 }

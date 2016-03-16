@@ -18,25 +18,16 @@
         android:layout_alignParentStart="true"
         android:id="@+id/layoutSearch">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
-            android:id="@+id/button"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtSearchCity"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/button"
             android:autoText="false"
-            android:textCursorDrawable="@null"
+            android:textSize="20dp"
+            android:textCursorDrawable="@drawable/search_edit_cursor"
             android:background="@drawable/search_edit"
             android:singleLine="true"/>
     </RelativeLayout>

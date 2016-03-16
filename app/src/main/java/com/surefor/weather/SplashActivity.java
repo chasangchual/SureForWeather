@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.surefor.weather.info.CityWeatherInfoCollection;
 import com.surefor.weather.info.CityWeatherInfoPersist;
 import com.surefor.weather.utils.ViewUtils;
 
@@ -45,8 +46,8 @@ public class SplashActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            // load persisted weather information to read city information and latest weather data.
             CityWeatherInfoPersist.load();
-
             return null ;
         }
 
@@ -54,7 +55,13 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void value) {
             super.onPostExecute(value);
 
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class) ;
+            Intent intent ;
+            // if weather information loaded yet, select add city first.
+            if(CityWeatherInfoCollection.getInstance().count() <= 0) {
+                intent = new Intent(SplashActivity.this, CitySearchActivity.class) ;
+            } else {
+                intent = new Intent(SplashActivity.this, MainActivity.class) ;
+            }
             startActivity(intent) ;
             finish() ;
         }

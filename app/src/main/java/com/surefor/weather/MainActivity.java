@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Intent intent = new Intent(MainActivity.this, CitySearchActivity.class) ;
-        startActivity(intent) ;
-        finish() ;
 /*
         RxBus.getBus().register(GetAutocompletePlaceEvent.Request.class, GoogleMap.getGetCodeAction()) ;
 

@@ -1,19 +1,21 @@
 package com.surefor.weather;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.surefor.weather.api.GoogleMapClient;
+import com.surefor.weather.api.GoogleMap;
 import com.surefor.weather.api.GoogleMapService;
-import com.surefor.weather.entity.place.AutocompletePlace;
+import com.surefor.weather.bus.RxBus;
 import com.surefor.weather.entity.place.Prediction;
+import com.surefor.weather.event.GetAutocompletePlaceEvent;
 import com.surefor.weather.rx.TextViewAfterTextChangeEvent;
 import com.surefor.weather.rx.TextViewAfterTextChangeEventOnSubscribe;
-import com.surefor.weather.utils.GoogleMapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +25,18 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.observers.Observers;
-import rx.schedulers.Schedulers;
 
 public class CitySearchActivity extends AppCompatActivity {
     @Bind(R.id.txtSearchCity)  EditText txtSearch ;
-    // @Bind(R.id.listCity) ListView lvCity ;
+    @Bind(R.id.lvCity) ListView listViewCity ;
     @BindString(R.string.key_google_geocode) String googleApiKey;
     CitySearchAutoCompleteAdapter adapter = null ;
 
-    Observable<TextViewAfterTextChangeEvent> observable ;
+    Observable<TextViewAfterTextChangeEvent> observableCityText ;
+    Subscription googleAutoComplete ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,37 +53,63 @@ public class CitySearchActivity extends AppCompatActivity {
         lvCity.setAdapter(adapter);
 
         // Observable<String> obserable = Observable<String>.create(new Observable<String>() {}) ;
-        observable = Observable.create(new TextViewAfterTextChangeEventOnSubscribe(txtSearch)) ;
+        observableCityText = Observable.create(new TextViewAfterTextChangeEventOnSubscribe(txtSearch)) ;
 
-        observable.debounce(400, TimeUnit.MILLISECONDS)
+        listViewCity.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Prediction prediction = adapter.getItem(position) ;
+                prediction.getDescription() ; // get selected location name
+
+                Intent intent = new Intent(CitySearchActivity.this, MainActivity.class) ;
+                startActivity(intent) ;
+                finish() ;
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        RxBus.getBus().register(GetAutocompletePlaceEvent.Request.class, GoogleMap.getGetAutoCompleteAction()) ;
+        RxBus.getBus().register(GetAutocompletePlaceEvent.Response.class, getRefreshListAction()) ;
+
+        googleAutoComplete = observableCityText.debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<TextViewAfterTextChangeEvent>() {
                     @Override
                     public void call(TextViewAfterTextChangeEvent textViewAfterTextChangeEvent) {
-                        adapter.clear();
                         Editable editable = textViewAfterTextChangeEvent.editable();
-                        if(editable.toString().trim().length() > 0) {
-                            GoogleMapClient apiClient = GoogleMapClient.getInstance();
-                            Observable<AutocompletePlace> observable = apiClient.getAutocompletePlace(editable.toString(), "(cities)", googleApiKey);
-
-                            observable.subscribeOn(Schedulers.newThread())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Action1<AutocompletePlace>() {
-                                        @Override
-                                        public void call(AutocompletePlace autocompletePlace) {
-                                            if(autocompletePlace.getStatus().equalsIgnoreCase(GoogleMapService.STATUS_OK)) {
-                                                adapter.clear();
-                                                adapter.addAll(autocompletePlace.getPredictions());
-                                            }
-                                        }
-                                    }, new Action1<Throwable>() {
-                                        @Override
-                                        public void call(Throwable throwable) {
-
-                                        }
-                                    });
+                        if (editable.toString().trim().length() > 0) {
+                            RxBus.getBus().post(new GetAutocompletePlaceEvent.Request(editable.toString().trim()));
+                        } else {
+                            adapter.clear();
                         }
                     }
                 }) ;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        googleAutoComplete.unsubscribe();
+        RxBus.getBus().unregister(GetAutocompletePlaceEvent.Request.class);
+        RxBus.getBus().unregister(GetAutocompletePlaceEvent.Response.class);
+    }
+
+    private Action1<GetAutocompletePlaceEvent.Response> getRefreshListAction() {
+        return new Action1<GetAutocompletePlaceEvent.Response>() {
+            @Override
+            public void call(GetAutocompletePlaceEvent.Response response) {
+                adapter.clear();
+                if(response.getStatus().equalsIgnoreCase(GoogleMapService.STATUS_OK)) {
+                    adapter.addAll(response.getPredictions());
+                }
+            }
+        } ;
     }
 }
