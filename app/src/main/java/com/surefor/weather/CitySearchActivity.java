@@ -8,14 +8,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.surefor.weather.api.GoogleMap;
 import com.surefor.weather.api.GoogleMapService;
 import com.surefor.weather.bus.RxBus;
 import com.surefor.weather.entity.place.Prediction;
 import com.surefor.weather.event.GetAutocompletePlaceEvent;
+import com.surefor.weather.event.GetWeatherCurrentEvent;
+import com.surefor.weather.event.GetWeatherDailyForecastEvent;
+import com.surefor.weather.event.GetWeatherForecastEvent;
 import com.surefor.weather.rx.TextViewAfterTextChangeEvent;
 import com.surefor.weather.rx.TextViewAfterTextChangeEventOnSubscribe;
+import com.surefor.weather.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,8 @@ import rx.functions.Action1;
 public class CitySearchActivity extends AppCompatActivity {
     @Bind(R.id.txtSearchCity)  EditText txtSearch ;
     @Bind(R.id.lvCity) ListView listViewCity ;
+    @Bind(R.id.txtCity) TextView tvCity ;
+    @Bind(R.id.txtCountry) TextView tvCountry ;
     @BindString(R.string.key_google_geocode) String googleApiKey;
     CitySearchAutoCompleteAdapter adapter = null ;
 
@@ -45,6 +52,11 @@ public class CitySearchActivity extends AppCompatActivity {
         //requestWindowFeature(Window.FEATURE_NO_TITLE) ;
         setContentView(R.layout.activity_city_search);
         ButterKnife.bind(this);
+
+        ViewUtils.setTypeFace(txtSearch, getAssets(), "fonts/gotham-light.ttf") ;
+        ViewUtils.setTypeFace(tvCity, getAssets(), "fonts/gotham-light.ttf") ;
+        ViewUtils.setTypeFace(tvCountry, getAssets(), "fonts/gotham-light.ttf") ;
+
 
         List<Prediction> predictions = new ArrayList<>() ;
         adapter = new CitySearchAutoCompleteAdapter(this, predictions) ;
@@ -61,10 +73,13 @@ public class CitySearchActivity extends AppCompatActivity {
                 Prediction prediction = adapter.getItem(position) ;
                 prediction.getDescription() ; // get selected location name
 
+                RxBus.getBus().post(new GetWeatherCurrentEvent.Request(prediction.getDescription()));
+                RxBus.getBus().post(new GetWeatherForecastEvent.Request(prediction.getDescription()));
+                RxBus.getBus().post(new GetWeatherDailyForecastEvent.Request(prediction.getDescription()));
+
                 Intent intent = new Intent(CitySearchActivity.this, MainActivity.class) ;
                 startActivity(intent) ;
                 finish() ;
-
             }
         });
 
@@ -112,4 +127,6 @@ public class CitySearchActivity extends AppCompatActivity {
             }
         } ;
     }
+
+
 }

@@ -29,6 +29,14 @@ public class CityWeatherInfo {
         this.name = name ;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public WeatherCurrent getCurrent() {
         return current;
     }
@@ -51,4 +59,5 @@ public class CityWeatherInfo {
 
     public void setDailyForecast(WeatherDailyForecast dailyForecast) {
         this.dailyForecast = dailyForecast;
-    }}
+    }
+}

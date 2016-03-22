@@ -7,10 +7,6 @@ public abstract class GetWeatherEvent<T> {
     public GetWeatherEvent() {
     }
 
-    public Request getRequest(Long id) {
-        return new Request(id) ;
-    }
-
     public Request getRequest(String name) {
         return new Request(name) ;
     }
@@ -19,32 +15,11 @@ public abstract class GetWeatherEvent<T> {
         return new Response(name, obj) ;
     }
 
-    public enum REQUEST_TYPE { BY_ID, BY_NAME }
-
     public static class Request {
-        private REQUEST_TYPE requestType ;
-        private Long id ;
         private String name ;
-
-        public Request(long id) {
-            setId(id);
-        }
 
         public Request(String name) {
             setName(name);
-        }
-
-        public REQUEST_TYPE getRequestType() {
-            return requestType;
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.requestType = REQUEST_TYPE.BY_ID ;
-            this.id = id;
         }
 
         public String getName() {
@@ -52,7 +27,6 @@ public abstract class GetWeatherEvent<T> {
         }
 
         public void setName(String name) {
-            this.requestType = REQUEST_TYPE.BY_NAME ;
             this.name = name;
         }
     }

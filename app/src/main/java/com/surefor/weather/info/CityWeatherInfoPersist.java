@@ -75,6 +75,20 @@ public class CityWeatherInfoPersist {
         } ;
     }
 
+    /**
+     * delete weather information persist file
+     */
+    public static void delete() {
+        try {
+            Context context = SuerForWeatherApp.getInstance().getApplicationContext() ;
+            File file = new File(context.getFilesDir(), WEATHER_INFO_FILE);
+
+            boolean deleted = file.delete() ;
+            deleted = context.deleteFile(WEATHER_INFO_FILE) ;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * persist weather information to internal storage
@@ -105,8 +119,11 @@ public class CityWeatherInfoPersist {
         try {
             load(FileUtils.readFileToString(file)) ;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            // ignore FileNotFoundException exception.
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }

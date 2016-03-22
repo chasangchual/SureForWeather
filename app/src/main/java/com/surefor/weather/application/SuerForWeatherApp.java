@@ -5,6 +5,7 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
+import com.surefor.weather.api.OpenWeatherMap;
 import com.surefor.weather.bus.RxBus;
 import com.surefor.weather.event.GetWeatherCurrentEvent;
 import com.surefor.weather.event.GetWeatherDailyForecastEvent;
@@ -33,6 +34,10 @@ public class SuerForWeatherApp extends Application {
         instance = (SuerForWeatherApp) getApplicationContext() ;
 
         // register event handler to persist weather information
+        RxBus.getBus().register(GetWeatherCurrentEvent.Request.class, OpenWeatherMap.getWeatherCurrentAction()) ;
+        RxBus.getBus().register(GetWeatherForecastEvent.Request.class, OpenWeatherMap.getWeatherForecastAction()) ;
+        RxBus.getBus().register(GetWeatherDailyForecastEvent.Request.class, OpenWeatherMap.getWeatherDailyForecastAction()) ;
+
         RxBus.getBus().register(GetWeatherCurrentEvent.Response.class, CityWeatherInfoPersist.getCurrentWeatherPersistAction()) ;
         RxBus.getBus().register(GetWeatherForecastEvent.Response.class, CityWeatherInfoPersist.getWeatherForecastPersistAction()) ;
         RxBus.getBus().register(GetWeatherDailyForecastEvent.Response.class, CityWeatherInfoPersist.getWeatherDailyForecastPersistAction()) ;

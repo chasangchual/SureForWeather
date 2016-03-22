@@ -10,11 +10,6 @@ public class GetWeatherDailyForecastEvent extends GetWeatherEvent<WeatherDailyFo
 
     }
     public static class Request extends GetWeatherEvent.Request  {
-
-        public Request(long id) {
-            super(id);
-        }
-
         public Request(String name) {
             super(name);
         }

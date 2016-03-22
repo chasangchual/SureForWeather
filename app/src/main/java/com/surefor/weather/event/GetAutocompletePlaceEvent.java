@@ -13,11 +13,11 @@ public class GetAutocompletePlaceEvent {
     }
 
     public Request getRequest(String place) {
-        return new GetAutocompletePlaceEvent.Request(place) ;
+        return new Request(place) ;
     }
 
     public Response getResponse(List<Prediction> predictions) {
-        return new GetAutocompletePlaceEvent.Response(predictions) ;
+        return new Response(predictions) ;
     }
 
     public static class Request {
